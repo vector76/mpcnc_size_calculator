@@ -15,7 +15,6 @@ before the MPCNC reaches its full range of motion in x and y.<br>
 Select your intended tool to account for this difference:<br>
 <input type="radio" name="tool" value="Pen" checked> Full range of motion<br>
 <input type="radio" name="tool" value="DW660"> Dewalt DW660<br>
-<input type="radio" name="tool" value="Makita"> Makita<br>
 
 <table><tr><td style="vertical-align:top"><!-- ################################## -->
 
@@ -90,6 +89,22 @@ function get_offsets() {
   primo.zleadscrew_minus_work = 76;
   primo.xbelt_minus_rail = 136;
   primo.ybelt_minus_rail = 136;
+  
+  var tool = $("input[name=tool]:checked").val();
+  if (tool == "Pen") {
+    // don't clip the working space at all
+  }
+  else if (tool == "DW660") {
+    // working space clipped by this much (not necessarily the same between burly and primo
+    burly.xrail_minus_work = burly.xrail_minus_work + 10;
+    burly.yrail_minus_work = burly.xrail_minus_work + 8;
+    
+    primo.xrail_minus_work = primo.xrail_minus_work + 15;
+    primo.yrail_minus_work = primo.xrail_minus_work + 12;
+  }
+  else {
+    alert("internal error: unrecognized tool " + tool);
+  }
 
   var model = $("input[name=model]:checked").val();
   if (model == "Primo") {
